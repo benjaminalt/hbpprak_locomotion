@@ -16,7 +16,7 @@ class RLTask(EpisodicTask):
         super(RLTask, self).__init__(environment)
 
     def on_position_update(self, msg):
-        self.current_pos = np.array([msg.data.pose.position.x, msg.data.pose.position.y, msg.data.pose.position.z])
+        self.current_pos = np.array([msg.pose[2].position.x, msg.pose[2].position.y, msg.pose[2].position.z])
 
     def isFinished(self):
         return time.time() - self.start_time > self.episode_time

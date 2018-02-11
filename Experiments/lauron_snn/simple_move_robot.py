@@ -9,7 +9,7 @@
 @nrp.MapRobotPublisher('leg1_gamma', Topic('/robot_leg1_gamma_joint_pos_cntr/command', std_msgs.msg.Float64))
 @nrp.MapRobotPublisher('leg2_alpha', Topic('/robot_leg2_alpha_joint_pos_cntr/command', std_msgs.msg.Float64))
 @nrp.MapRobotPublisher('leg2_beta', Topic('/robot_leg2_beta_joint_pos_cntr/command', std_msgs.msg.Float64))
-@nrp.MapRobotPublisher('leg2_delta', Topic('/robot_leg22_delta_joint_pos_cntr/command', std_msgs.msg.Float64))
+@nrp.MapRobotPublisher('leg2_delta', Topic('/robot_leg2_delta_joint_pos_cntr/command', std_msgs.msg.Float64))
 @nrp.MapRobotPublisher('leg2_gamma', Topic('/robot_leg2_gamma_joint_pos_cntr/command', std_msgs.msg.Float64))
 @nrp.MapRobotPublisher('leg3_alpha', Topic('/robot_leg3_alpha_joint_pos_cntr/command', std_msgs.msg.Float64))
 @nrp.MapRobotPublisher('leg3_beta', Topic('/robot_leg3_beta_joint_pos_cntr/command', std_msgs.msg.Float64))

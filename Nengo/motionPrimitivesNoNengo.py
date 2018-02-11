@@ -1,3 +1,4 @@
+from __future__ import print_function
 import rospy
 import numpy as np	
 from std_msgs.msg import Float64
@@ -25,7 +26,6 @@ class MotionPrimitives():
 		for i in self._unique_joints:
 			self._joints_pub[0].append(i)
 			self._joints_pub[1].append(rospy.Publisher(i, Float64, queue_size=1))
-				
 		
 		#Indices and Values (40 samples)		
 		self._indices_40 = np.array([0. , 0.03, 0.05,  0.08,  0.1,   0.13,  0.15,  0.18,  0.21,  0.23,  0.26,  0.28, 0.31,  0.33,  0.36,  0.38,  0.41,  0.44,  0.46,  0.49,  0.51,  0.54,  0.56,  0.59, 0.62,  0.64,  0.67,  0.69,  0.72,  0.74,  0.77,  0.79,  0.82, 0.85, 0.87, 0.9,  0.92, 0.95, 0.97, 1.])
@@ -86,7 +86,9 @@ class MotionPrimitives():
 	
 	#publish topic 
 	def apply(self, stim):
+		print("Apply called with {}".format(stim))
 		x = self.map(self.map_trajectory(stim))
+		print("Computed x: {}".format(x))
 		z = self._num_joints
 		for i in range(len(self._joints_pub[1])):
 			self._joints_pub[1][i].publish(x[i%z])
@@ -97,13 +99,20 @@ def main():
 	rospy.init_node("motion_primitives_test")
 
 	leg_0_AD_joints = [['/robot_leg0_alpha_joint_pos_cntr/command'],['/robot_leg0_delta_joint_pos_cntr/command']]
-	leg_4_AD_joints = [['/robot_leg4_alpha_joint_pos_cntr/command'],['/robot_leg4_delta_joint_pos_cntr/command']]
-	swing = MotionPrimitives(0, 0, leg_0_AD_joints, leg_4_AD_joints)
-	
+	leg_0_BG_joints = [['/robot_leg0_beta_joint_pos_cntr/command'],['/robot_leg0_gamma_joint_pos_cntr/command']]
+	leg_0_B_joint = [['/robot_leg0_beta_joint_pos_cntr/command']]
+
+	swing = MotionPrimitives(0, 0, leg_0_AD_joints)
+	liftleg = MotionPrimitives(1, 0, leg_0_BG_joints)
+	stance = MotionPrimitives(2, 0, leg_0_B_joint)
+
 	t = 0
 	rate = rospy.Rate(1)
 	while not rospy.is_shutdown():
-		swing.apply(1 if t % 2 == 0 else 0)
+		print("Calling apply...")
+		#swing.apply(0.5 if t % 2 == 0 else 0)
+		liftleg.apply(0.5 if t % 2 == 0 else 0)
+		#stance.apply(1 if t % 2 == 0 else 0)
 		t += 1
 		rate.sleep()
 

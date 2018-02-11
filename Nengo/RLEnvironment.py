@@ -2,9 +2,9 @@ from pybrain.rl.environments.environment import Environment
 from rospy import Subscriber
 from sensor_msgs.msg import JointState
 from collections import defaultdict
-from motionPrimitives import MotionPrimitives
+from motionPrimitivesNoNengo import MotionPrimitives
 import numpy as np
-import nengo
+import time
 
 class RLEnvironment(Environment):
     joint_names = ["robot_leg0_alpha_joint", "robot_leg0_beta_joint", "robot_leg0_delta_joint", "robot_leg0_gamma_joint",
@@ -18,11 +18,7 @@ class RLEnvironment(Environment):
     action_run_time = 1 # seconds
 
     def __init__(self):
-        """
-        Set up the actions and sensors of this environment.
-        The neural network simulation must be started by the client!
-        """
-        self.joint_state_subscriber = Subscriber("/robot/joints", JointState, self.on_joint_states_changed)
+        self.joint_state_subscriber = Subscriber("/joint_states", JointState, self.on_joint_states_changed)
         self.joint_states = np.zeros(len(self.joint_names), dtype=np.float)
         self.actions = []
         self.primitives = []
@@ -41,34 +37,22 @@ class RLEnvironment(Environment):
                     joint_topics = [["/robot_leg{}_beta_joint_pos_cntr/command".format(leg_idx)], ["/robot_leg{}_gamma_joint_pos_cntr/command".format(leg_idx)]]
                 elif primitive_idx == 2:
                     joint_topics = [["/robot_leg{}_beta_joint_pos_cntr/command".format(leg_idx)]]
-                self.primitives.append(MotionPrimitives(primitive_idx, lambda : self.stimuli[leg_idx, primitive_idx], joint_topics))
+                self.primitives.append(MotionPrimitives(primitive_idx, 0, joint_topics))
         self.primitives = np.reshape(np.array(self.primitives), (self.num_legs,self.num_primitives))
-
-        self.model = nengo.Network()
-        with self.model:
-            for leg_idx in range(self.num_legs):
-                for primitive_idx in range(self.num_primitives):
-                    self.model.add(self.primitives[leg_idx, primitive_idx].get_network())
 
     def make_move_func(self, leg_idx, primitive_idx, stimulus):
         return lambda : self.move(leg_idx, primitive_idx, stimulus)
 
     def move(self, leg_idx, primitive_idx, stimulus):
-        self.stimuli[leg_idx, primitive_idx] = stimulus
+        self.primitives[leg_idx, primitive_idx].apply(stimulus)
 
     def on_joint_states_changed(self, msg):
-        self.joint_states = np.array(msg.data.position[:-2])
+        self.joint_states = np.array(msg.position[:-2])
 
     def performAction(self, action):
-        """
-        Set a stimulus for the chosen action (leg & motion primitive).
-        Runs a short nengo simulation to execute the primitives.
-        """
-        self.actions[action]()
-
-        # Start nengo simulation to move the joints
-        with nengo.Simulator(self.model) as sim:
-            sim.run(self.action_run_time)
+        action_idx = int(action[0]
+        self.actions[action_idx)]()
+        time.sleep(self.action_run_time)
     
     def getSensors(self):
         return self.joint_states
