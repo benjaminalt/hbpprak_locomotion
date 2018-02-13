@@ -1,3 +1,4 @@
+from __future__ import print_function
 from pybrain.rl.environments.environment import Environment
 from rospy import Subscriber
 from sensor_msgs.msg import JointState
@@ -15,7 +16,7 @@ class RLEnvironment(Environment):
             "robot_leg5_alpha_joint", "robot_leg5_beta_joint", "robot_leg5_delta_joint", "robot_leg5_gamma_joint"]
     num_legs = 6
     num_primitives = 3
-    action_run_time = 1 # seconds
+    action_run_time = 0.1 # seconds
 
     def __init__(self):
         self.joint_state_subscriber = Subscriber("/joint_states", JointState, self.on_joint_states_changed)
@@ -50,8 +51,9 @@ class RLEnvironment(Environment):
         self.joint_states = np.array(msg.position[:-2])
 
     def performAction(self, action):
-        action_idx = int(action[0]
-        self.actions[action_idx)]()
+        print("Performing action {}".format(action))
+        action_idx = int(action[0])
+        self.actions[action_idx]()
         time.sleep(self.action_run_time)
     
     def getSensors(self):

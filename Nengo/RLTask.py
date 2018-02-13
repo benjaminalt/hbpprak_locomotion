@@ -23,7 +23,7 @@ class RLTask(EpisodicTask):
     
     def getReward(self):
         self.last_poses.append(np.copy(self.current_pos))
-        return np.linalg.norm(self.last_poses[-1] - self.last_poses[0])
+        return np.array([(np.linalg.norm(self.last_poses[-1] - self.last_poses[0]))])
     
     def getObservation(self):
         obs = super(RLTask, self).getObservation()

@@ -86,9 +86,7 @@ class MotionPrimitives():
 	
 	#publish topic 
 	def apply(self, stim):
-		print("Apply called with {}".format(stim))
 		x = self.map(self.map_trajectory(stim))
-		print("Computed x: {}".format(x))
 		z = self._num_joints
 		for i in range(len(self._joints_pub[1])):
 			self._joints_pub[1][i].publish(x[i%z])
