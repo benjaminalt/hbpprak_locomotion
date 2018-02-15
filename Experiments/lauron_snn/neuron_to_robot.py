@@ -1,4 +1,13 @@
-@nrp.MapSpikeSink("output_population", nrp.brain.outputs, nrp.leaky_integrator_alpha)
+@nrp.MapSpikeSink("output_0", nrp.brain.outputs[0], nrp.leaky_integrator_alpha)
+@nrp.MapSpikeSink("output_1", nrp.brain.outputs[1], nrp.leaky_integrator_alpha)
+@nrp.MapSpikeSink("output_2", nrp.brain.outputs[2], nrp.leaky_integrator_alpha)
+@nrp.MapSpikeSink("output_3", nrp.brain.outputs[3], nrp.leaky_integrator_alpha)
+@nrp.MapSpikeSink("output_4", nrp.brain.outputs[4], nrp.leaky_integrator_alpha)
+@nrp.MapSpikeSink("output_5", nrp.brain.outputs[5], nrp.leaky_integrator_alpha)
+@nrp.MapRobotPublisher('debug_output_0', Topic('/group_3/debug_output_0', std_msgs.msg.Float64))
+@nrp.MapRobotPublisher('debug_output_1', Topic('/group_3/debug_output_1', std_msgs.msg.Float64))
 @nrp.Neuron2Robot()
-def neuron_to_robot(t, output_population):
-    clientLogger.info(output_population.voltage)
+def neuron_to_robot(t, output_0, output_1, output_2, output_3, output_4, output_5, debug_output_0, debug_output_1):
+    debug_output_0.send_message(std_msgs.msg.Float64(output_0.voltage))
+    debug_output_1.send_message(std_msgs.msg.Float64(output_1.voltage))
+    clientLogger.info("{} {}".format(output_0.voltage, output_1.voltage))

@@ -6,14 +6,22 @@ __author__ = 'Benjamin Alt, Felix Schneider'
 from hbp_nrp_cle.brainsim import simulator as sim
 import numpy as np
 
-n_sensors = 2
-n_outputs = 6
+n_sensors = 120
+n_legs = 6
 
 sensors = sim.Population(n_sensors, cellclass=sim.IF_curr_exp())
-outputs = sim.Population(n_outputs, cellclass=sim.IF_curr_exp())
+outputs = [sim.Population(1, cellclass=sim.IF_curr_exp()) for i in range(n_legs)]
 
-weights = np.zeros(shape=(n_sensors, n_outputs)) # TODO
+projs = []
+for i in range(n_legs):
+    if i % 2 == 0:
+        weight = [1.0 for k in range(n_sensors // 2)]
+        weight.extend([-1.0 for k in range(n_sensors // 2)])
+    else:
+        weight = [0.0 for k in range(n_sensors // 2)]
+        weight.extend([1.0 for k in range(n_sensors // 2)])
+    projs.append(sim.Projection(sensors, outputs[i], sim.AllToAllConnector(), sim.StaticSynapse(weight=np.array(weight).reshape((n_sensors, 1)))))
 
-proj = sim.Projection(sensors, outputs, sim.AllToAllConnector(), sim.StaticSynapse(weight=weights))
-
-circuit = sensors + outputs
+circuit = sensors
+for i in range(n_legs):
+    circuit += outputs[i]
