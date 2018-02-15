@@ -1,4 +1,3 @@
-# Imported Python Transfer Function
 @nrp.MapRobotPublisher('leg0_alpha', Topic('/robot_leg0_alpha_joint_pos_cntr/command', std_msgs.msg.Float64))
 @nrp.MapRobotPublisher('leg0_beta', Topic('/robot_leg0_beta_joint_pos_cntr/command', std_msgs.msg.Float64))
 @nrp.MapRobotPublisher('leg0_delta', Topic('/robot_leg0_delta_joint_pos_cntr/command', std_msgs.msg.Float64))
@@ -24,7 +23,7 @@
 @nrp.MapRobotPublisher('leg5_delta', Topic('/robot_leg5_delta_joint_pos_cntr/command', std_msgs.msg.Float64))
 @nrp.MapRobotPublisher('leg5_gamma', Topic('/robot_leg5_gamma_joint_pos_cntr/command', std_msgs.msg.Float64))
 @nrp.Robot2Neuron()
-def simple_move_robot(t, leg0_alpha, leg0_beta, leg0_delta, leg0_gamma, leg1_alpha, leg1_beta, leg1_delta, leg1_gamma, leg2_alpha, leg2_beta, leg2_delta, leg2_gamma, leg3_alpha, leg3_beta, leg3_delta, leg3_gamma,  leg4_alpha, leg4_beta, leg4_delta, leg4_gamma, leg5_alpha, leg5_beta, leg5_delta, leg5_gamma):
+def initialize_lauron(t, leg0_alpha, leg0_beta, leg0_delta, leg0_gamma, leg1_alpha, leg1_beta, leg1_delta, leg1_gamma, leg2_alpha, leg2_beta, leg2_delta, leg2_gamma, leg3_alpha, leg3_beta, leg3_delta, leg3_gamma,  leg4_alpha, leg4_beta, leg4_delta, leg4_gamma, leg5_alpha, leg5_beta, leg5_delta, leg5_gamma):
     #initialization: make lauron stand
     if t < 0.5:
         leg0_alpha.send_message(std_msgs.msg.Float64(0))
