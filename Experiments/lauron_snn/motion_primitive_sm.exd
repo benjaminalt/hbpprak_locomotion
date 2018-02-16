@@ -1,0 +1,48 @@
+import hbp_nrp_excontrol.nrp_states as states
+from hbp_nrp_excontrol.logs import clientLogger
+from smach import StateMachine
+from smach.state import State
+from std_msgs.msg import Int8
+import rospy
+import os, sys
+sys.path.append(os.path.join(os.path.dirname(__file__)))
+from MotionPrimitives import MotionPrimitives
+
+FINISHED = 'FINISHED'
+ERROR = 'ERROR'
+PREEMPTED = 'PREEMPTED'
+
+sm = StateMachine(outcomes=[FINISHED, ERROR, PREEMPTED])
+
+class AdvertiseServicesState(State):
+    num_legs = 6
+
+    def __init__(self, outcomes=['success', 'aborted']):
+        super(AdvertiseServicesState, self).__init__(outcomes=outcomes)
+        self.subscribers = [rospy.Subscriber("/group_3/leg_{}_primitive".format(i), Int8, lambda msg: self.on_primitive_cmd_received(msg, i)) for i in range(self.num_legs)]
+        self.primitives = [{
+            "swing" : MotionPrimitives(0, 0, [['/robot_leg{}_alpha_joint_pos_cntr/command'.format(i)],['/robot_leg{}_delta_joint_pos_cntr/command'.format(i)]]),
+            "liftleg" : MotionPrimitives(0, 0, [['/robot_leg{}_beta_joint_pos_cntr/command'.format(i)],['/robot_leg{}_gamma_joint_pos_cntr/command'.format(i)]]),
+            "stance" : MotionPrimitives(0, 0, [['/robot_leg{}_beta_joint_pos_cntr/command'.format(i)]])
+        } for i in range(self.num_legs)]
+        clientLogger.info("Created subscribers and primitives")
+
+    def execute(self, userdata):
+        while not rospy.is_shutdown():
+            clientLogger.info("Rospy is spinning...")
+            rospy.spin()
+        return 'success'
+    
+    def on_primitive_cmd_received(self, msg, leg_idx):
+        assert leg_idx > 0 and leg_idx < self.num_legs
+        self.primitives[leg_idx]["swing"].apply(msg.data)
+        self.primitives[leg_idx]["liftleg"].apply(msg.data)
+
+
+with sm:
+    StateMachine.add(
+      "advertise_services",
+      AdvertiseServicesState(),
+      transitions = {"success": "advertise_services",
+                     "aborted": ERROR}
+    )

@@ -11,6 +11,9 @@
         <robotPose x="0.0" y="0.0" z="1" ux="0.0" uy="0.0" uz="0.0" theta="0.0"/>
     </environmentModel>
     <bibiConf src="template_lauron.bibi"/>
+    <experimentControl>
+		<stateMachine id="MotionPrimitivesMachine" src="motion_primitive_sm.exd" xsi:type="SMACHStateMachine"/>
+	</experimentControl>
     <cameraPose>
         <cameraPosition x="4.5" y="0" z="1.8"/>
         <cameraLookAt x="0" y="0" z="0.6"/>

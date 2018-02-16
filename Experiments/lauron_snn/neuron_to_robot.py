@@ -10,4 +10,4 @@
 def neuron_to_robot(t, output_0, output_1, output_2, output_3, output_4, output_5, debug_output_0, debug_output_1):
     debug_output_0.send_message(std_msgs.msg.Float64(output_0.voltage))
     debug_output_1.send_message(std_msgs.msg.Float64(output_1.voltage))
-    clientLogger.info("{} {}".format(output_0.voltage, output_1.voltage))
+    #clientLogger.info("{} {}".format(output_0.voltage, output_1.voltage))
