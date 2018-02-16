@@ -3,8 +3,11 @@
 @nrp.Robot2Neuron()
 def robot_to_neuron(t, sensors, n_sensors):
     amp = 5
-    for i in range(n_sensors.value // 2):
-        sensors[i].amplitude = amp * 1.0
+    freq = 8
     import math
-    for i in range(n_sensors.value // 2, n_sensors.value):
-        sensors[i].amplitude = amp * (math.sin(2*t) + 1) / 2.0
+    for i in range(n_sensors.value // 3):
+        sensors[i].amplitude = amp * (math.cos(freq * t) + 1) / 2.0
+    for i in range(n_sensors.value // 3, 2 * n_sensors.value // 3):
+        sensors[i].amplitude = amp * (math.sin(freq * t) + 1) / 2.0
+    for i in range(2 * n_sensors.value // 3, n_sensors.value):
+        sensors[i].amplitude = amp * 1.0

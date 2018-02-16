@@ -7,5 +7,4 @@
   <transferFunction xsi:type="PythonTransferFunction" src="initialize_lauron.py"/>
   <transferFunction xsi:type="PythonTransferFunction" src="robot_to_neuron.py"/>
   <transferFunction xsi:type="PythonTransferFunction" src="neuron_to_robot.py"/>
-  <transferFunction xsi:type="PythonTransferFunction" src="monitor_population.py"/>
 </bibi>
