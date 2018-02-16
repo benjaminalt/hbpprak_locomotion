@@ -104,6 +104,8 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+*.exdc
+
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
