@@ -14,7 +14,7 @@ outputs = [sim.Population(1, cellclass=sim.IF_curr_exp()) for i in range(n_legs)
 
 projs = []
 for i in range(n_legs):
-    if i % 2 == 0:
+    if i in [0, 3, 4]:
         weight = [1.0 for k in range(n_sensors // 2)]
         weight.extend([-1.0 for k in range(n_sensors // 2)])
     else:

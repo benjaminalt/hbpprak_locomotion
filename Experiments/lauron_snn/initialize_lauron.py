@@ -25,7 +25,7 @@
 @nrp.Robot2Neuron()
 def initialize_lauron(t, leg0_alpha, leg0_beta, leg0_delta, leg0_gamma, leg1_alpha, leg1_beta, leg1_delta, leg1_gamma, leg2_alpha, leg2_beta, leg2_delta, leg2_gamma, leg3_alpha, leg3_beta, leg3_delta, leg3_gamma,  leg4_alpha, leg4_beta, leg4_delta, leg4_gamma, leg5_alpha, leg5_beta, leg5_delta, leg5_gamma):
     #initialization: make lauron stand
-    if t < 0.5:
+    if t < 1:
         leg0_alpha.send_message(std_msgs.msg.Float64(0))
         leg0_beta.send_message(std_msgs.msg.Float64(1.5))
         leg0_delta.send_message(std_msgs.msg.Float64(0))

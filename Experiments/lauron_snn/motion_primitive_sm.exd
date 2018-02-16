@@ -2,7 +2,7 @@ import hbp_nrp_excontrol.nrp_states as states
 from hbp_nrp_excontrol.logs import clientLogger
 from smach import StateMachine
 from smach.state import State
-from std_msgs.msg import Int8
+from std_msgs.msg import Float64
 import rospy
 import os, sys
 sys.path.append(os.path.join(os.path.dirname(__file__)))
@@ -19,24 +19,35 @@ class AdvertiseServicesState(State):
 
     def __init__(self, outcomes=['success', 'aborted']):
         super(AdvertiseServicesState, self).__init__(outcomes=outcomes)
-        self.subscribers = [rospy.Subscriber("/group_3/leg_{}_primitive".format(i), Int8, lambda msg: self.on_primitive_cmd_received(msg, i)) for i in range(self.num_legs)]
+        self.subscribers = []
+        for i in range(self.num_legs):
+            self.subscribers.append(rospy.Subscriber("/group_3/leg_{}_primitive".format(i), Float64, self.make_callback_func(i)))
         self.primitives = [{
             "swing" : MotionPrimitives(0, 0, [['/robot_leg{}_alpha_joint_pos_cntr/command'.format(i)],['/robot_leg{}_delta_joint_pos_cntr/command'.format(i)]]),
-            "liftleg" : MotionPrimitives(0, 0, [['/robot_leg{}_beta_joint_pos_cntr/command'.format(i)],['/robot_leg{}_gamma_joint_pos_cntr/command'.format(i)]]),
-            "stance" : MotionPrimitives(0, 0, [['/robot_leg{}_beta_joint_pos_cntr/command'.format(i)]])
+            "liftleg" : MotionPrimitives(1, 0, [['/robot_leg{}_beta_joint_pos_cntr/command'.format(i)],['/robot_leg{}_gamma_joint_pos_cntr/command'.format(i)]]),
+            "stance" : MotionPrimitives(2, 0, [['/robot_leg{}_beta_joint_pos_cntr/command'.format(i)]])
         } for i in range(self.num_legs)]
-        clientLogger.info("Created subscribers and primitives")
+        # for prim in self.primitives:
+        #     clientLogger.info(prim["swing"]._primitiveType)
+        #     clientLogger.info(prim["swing"]._joints)
+        #     clientLogger.info("====================")
 
     def execute(self, userdata):
         while not rospy.is_shutdown():
-            clientLogger.info("Rospy is spinning...")
             rospy.spin()
         return 'success'
     
+    def make_callback_func(self, leg_idx):
+        return lambda msg: self.on_primitive_cmd_received(msg, leg_idx)
+
     def on_primitive_cmd_received(self, msg, leg_idx):
-        assert leg_idx > 0 and leg_idx < self.num_legs
-        self.primitives[leg_idx]["swing"].apply(msg.data)
-        self.primitives[leg_idx]["liftleg"].apply(msg.data)
+        assert leg_idx >= 0 and leg_idx < self.num_legs
+        stim = msg.data if leg_idx % 2 == 0 else 1.0 - msg.data
+        self.primitives[leg_idx]["swing"].apply(stim)
+        if (msg.data > 0.25 and msg.data < 0.75):
+            self.primitives[leg_idx]["liftleg"].apply(0)
+        else:
+            self.primitives[leg_idx]["liftleg"].apply(0.5)
 
 
 with sm:

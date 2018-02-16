@@ -92,7 +92,6 @@ class MotionPrimitives():
 			self._joints_pub[1][i].publish(x[i%z])
 		return True
 
-
 def main():
 	rospy.init_node("motion_primitives_test")
 
@@ -100,18 +99,29 @@ def main():
 	leg_0_BG_joints = [['/robot_leg0_beta_joint_pos_cntr/command'],['/robot_leg0_gamma_joint_pos_cntr/command']]
 	leg_0_B_joint = [['/robot_leg0_beta_joint_pos_cntr/command']]
 
-	swing = MotionPrimitives(0, 0, leg_0_AD_joints)
-	liftleg = MotionPrimitives(1, 0, leg_0_BG_joints)
-	stance = MotionPrimitives(2, 0, leg_0_B_joint)
+	leg_1_AD_joints = [['/robot_leg1_alpha_joint_pos_cntr/command'],['/robot_leg1_delta_joint_pos_cntr/command']]
+	leg_1_BG_joints = [['/robot_leg1_beta_joint_pos_cntr/command'],['/robot_leg1_gamma_joint_pos_cntr/command']]
+	leg_1_B_joint = [['/robot_leg1_beta_joint_pos_cntr/command']]
 
+	swing_0 = MotionPrimitives(0, 0, leg_0_AD_joints)
+	liftleg_0 = MotionPrimitives(1, 0, leg_0_BG_joints)
+	stance_0 = MotionPrimitives(2, 0, leg_0_B_joint)
+
+	swing_1 = MotionPrimitives(0, 0, leg_1_AD_joints)
+	liftleg_1 = MotionPrimitives(1, 0, leg_1_BG_joints)
+	stance_1 = MotionPrimitives(2, 0, leg_1_B_joint)
+
+	import math
 	t = 0
-	rate = rospy.Rate(1)
+	rate = rospy.Rate(10)
 	while not rospy.is_shutdown():
 		print("Calling apply...")
-		#swing.apply(0.5 if t % 2 == 0 else 0)
-		liftleg.apply(0.5 if t % 2 == 0 else 0)
+		swing_0.apply((math.sin(t) + 1) /2.0)
+		liftleg_0.apply((math.sin(t) + 1) /2.0)
+		swing_1.apply((math.sin(t) + 1) /2.0)
+		liftleg_1.apply((math.sin(t) + 1) /2.0)
 		#stance.apply(1 if t % 2 == 0 else 0)
-		t += 1
+		t += 0.1
 		rate.sleep()
 
 

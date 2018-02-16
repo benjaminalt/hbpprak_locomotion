@@ -7,4 +7,4 @@ def robot_to_neuron(t, sensors, n_sensors):
         sensors[i].amplitude = amp * 1.0
     import math
     for i in range(n_sensors.value // 2, n_sensors.value):
-        sensors[i].amplitude = amp * (math.sin(t) + 1) / 2.0
+        sensors[i].amplitude = amp * (math.sin(2*t) + 1) / 2.0

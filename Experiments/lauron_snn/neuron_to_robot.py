@@ -6,8 +6,22 @@
 @nrp.MapSpikeSink("output_5", nrp.brain.outputs[5], nrp.leaky_integrator_alpha)
 @nrp.MapRobotPublisher('debug_output_0', Topic('/group_3/debug_output_0', std_msgs.msg.Float64))
 @nrp.MapRobotPublisher('debug_output_1', Topic('/group_3/debug_output_1', std_msgs.msg.Float64))
+@nrp.MapRobotPublisher('leg_0_pub', Topic('/group_3/leg_0_primitive', std_msgs.msg.Float64))
+@nrp.MapRobotPublisher('leg_1_pub', Topic('/group_3/leg_1_primitive', std_msgs.msg.Float64))
+@nrp.MapRobotPublisher('leg_2_pub', Topic('/group_3/leg_2_primitive', std_msgs.msg.Float64))
+@nrp.MapRobotPublisher('leg_3_pub', Topic('/group_3/leg_3_primitive', std_msgs.msg.Float64))
+@nrp.MapRobotPublisher('leg_4_pub', Topic('/group_3/leg_4_primitive', std_msgs.msg.Float64))
+@nrp.MapRobotPublisher('leg_5_pub', Topic('/group_3/leg_5_primitive', std_msgs.msg.Float64))
 @nrp.Neuron2Robot()
-def neuron_to_robot(t, output_0, output_1, output_2, output_3, output_4, output_5, debug_output_0, debug_output_1):
-    debug_output_0.send_message(std_msgs.msg.Float64(output_0.voltage))
-    debug_output_1.send_message(std_msgs.msg.Float64(output_1.voltage))
-    #clientLogger.info("{} {}".format(output_0.voltage, output_1.voltage))
+def neuron_to_robot(t, output_0, output_1, output_2, output_3, output_4, output_5, debug_output_0, debug_output_1, leg_0_pub, leg_1_pub, leg_2_pub, leg_3_pub, leg_4_pub, leg_5_pub):
+    if t > 2:
+        max_output = 1.67
+        scaling_factor = 1.0/max_output
+        debug_output_0.send_message(std_msgs.msg.Float64(output_0.voltage))
+        debug_output_1.send_message(std_msgs.msg.Float64(output_1.voltage))
+        leg_0_pub.send_message(std_msgs.msg.Float64(scaling_factor * output_0.voltage))
+        leg_1_pub.send_message(std_msgs.msg.Float64(scaling_factor * output_1.voltage))
+        leg_2_pub.send_message(std_msgs.msg.Float64(scaling_factor * output_2.voltage))
+        leg_3_pub.send_message(std_msgs.msg.Float64(scaling_factor * output_3.voltage))
+        leg_4_pub.send_message(std_msgs.msg.Float64(scaling_factor * output_4.voltage))
+        leg_5_pub.send_message(std_msgs.msg.Float64(scaling_factor * output_5.voltage))
