@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bibi xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.humanbrainproject.eu/SP10/2014/BIBI" xsi:schemaLocation="http://schemas.humanbrainproject.eu/SP10/2014/BIBI ../bibi_configuration.xsd">
   <brainModel>
-    <file>brain_model/hexapod.py</file>
+    <file>brain_model/hexapod_gallop.py</file>
   </brainModel>
   <bodyModel>lauron_model/model.sdf</bodyModel>
   <transferFunction xsi:type="PythonTransferFunction" src="initialize_lauron.py"/>
-  <transferFunction xsi:type="PythonTransferFunction" src="robot_to_neuron.py"/>
-  <transferFunction xsi:type="PythonTransferFunction" src="neuron_to_robot.py"/>
+  <transferFunction xsi:type="PythonTransferFunction" src="robot_to_neuron_gallop.py"/>
+  <transferFunction xsi:type="PythonTransferFunction" src="neuron_to_robot_gallop.py"/>
 </bibi>

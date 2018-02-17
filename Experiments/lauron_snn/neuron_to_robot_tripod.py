@@ -25,7 +25,7 @@
 @nrp.MapRobotPublisher('leg_4_lift_pub', Topic('/group_3/leg_4_lift', std_msgs.msg.Float64))
 @nrp.MapRobotPublisher('leg_5_lift_pub', Topic('/group_3/leg_5_lift', std_msgs.msg.Float64))
 @nrp.Neuron2Robot()
-def neuron_to_robot(t, output_swing_0, output_swing_1, output_swing_2, output_swing_3, output_swing_4, output_swing_5,
+def neuron_to_robot_tripod(t, output_swing_0, output_swing_1, output_swing_2, output_swing_3, output_swing_4, output_swing_5,
     output_lift_0, output_lift_1, output_lift_2, output_lift_3, output_lift_4, output_lift_5,
     debug_output_0, debug_output_1, leg_0_swing_pub, leg_1_swing_pub, leg_2_swing_pub, leg_3_swing_pub, leg_4_swing_pub, leg_5_swing_pub,
     leg_0_lift_pub, leg_1_lift_pub, leg_2_lift_pub, leg_3_lift_pub, leg_4_lift_pub, leg_5_lift_pub):

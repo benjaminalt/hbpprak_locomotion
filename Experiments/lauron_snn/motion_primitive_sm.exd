@@ -42,7 +42,10 @@ class AdvertiseServicesState(State):
 
     def on_primitive_cmd_received(self, msg, leg_idx, primitive):
         stim = msg.data if leg_idx % 2 == 0 else 1.0 - msg.data
-        self.primitives[leg_idx][primitive].apply(stim)
+        if primitive == "lift":
+            self.primitives[leg_idx][primitive].apply(0 if msg.data < 0.25 else 0.5)
+        else:
+            self.primitives[leg_idx][primitive].apply(stim)
 
 with sm:
     StateMachine.add(
